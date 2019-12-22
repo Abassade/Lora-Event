@@ -13,6 +13,10 @@ const ticketSchema = new mongoose.Schema({
         type: String, 
         required: true,
     },
+    ticketId: {
+        type: String, 
+        required: true,
+    },
     amount: {
         type: Number, 
         required: true,

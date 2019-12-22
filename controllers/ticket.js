@@ -1,6 +1,8 @@
 const Ticket = require('../models/ticket');
 const paystack = require('../config/paystack');
 const _ = require('lodash');
+const mail =require('../config/mail');
+const uniquestriing = require('unique-string'); const call_via = '--> phone';
 const {initializePayment, verifyPayment} = paystack();
 
 class TicketController {
@@ -37,8 +39,9 @@ class TicketController {
             const data = _.at(response.data, ['reference', 'amount','customer.email', 'metadata.full_name', 'event']);
 
             const [reference, amount, event, email, full_name] =  data;
+            const ticketId = uniquestriing();
             
-            const newTicket = {reference, amount, event, email, full_name}
+            const newTicket = {reference, amount, ticketId ,event, email, full_name}
 
             const ticket = new Ticket(newTicket)
 
@@ -57,13 +60,22 @@ class TicketController {
 
     verifyTicket(req, res){
         const id = req.params.id;
-        Ticket.findById(id).then((ticket)=>{
+        Ticket.findById(id).then(async (ticket)=>{
             if(!ticket){
-                //handle error when the Ticket is not found
+                //handle error when the ticket is not found
+                console.log('cant find it');
                 res.redirect('/error')
+            }
+            try{
+                console.log(ticket);
+                await mail(ticket.email, ticket.ticketId);
+            }
+            catch(mail_error){
+                console.log('error from nodemailer', mail_error);
             }
             res.render('success.pug',{ticket});
         }).catch((e)=>{
+            console.log('error from trans', e);
             res.redirect('/error')
         });
     }
