@@ -1,0 +1,27 @@
+extends layout
+block content
+    main
+        .row.justify-content-center
+            .col-lg-6.container3.text-white.p-5
+                .container4
+                    h3.text-center
+                        | Buy Ticket For   Event  Now
+                .container.pt-3
+                    form(name='myForm', action='/paystack/pay', method='POST')
+                        input#name(type='text', name='full_name', placeholder='Enter Your Full Name')
+                        hr
+                        input#email(type='email', name='email', placeholder='Enter Your Email')
+                        hr
+                        select(name='event')
+                            option Select Event
+                            option(value='dinner') OAU Dinner
+                            option(value='naira') Naira Concert
+                            option(value='totti') Totti Turn Up
+                        hr
+                        select(name='amount')
+                            option Select Amount
+                            option(value='5000') 5000
+                            option(value='10000') 10000
+                            option(value='20000') 20000
+                        .bttn.pt-2
+                            button(type='submit') Buy
